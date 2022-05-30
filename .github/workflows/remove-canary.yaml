@@ -1,0 +1,20 @@
+name: Remove Canary
+
+on:
+  workflow_call:
+    inputs:
+      diff:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  remove:
+    name: Remove Canary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Remove Canary
+        run: echo "Remove Canary"

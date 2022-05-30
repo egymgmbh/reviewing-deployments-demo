@@ -1,0 +1,30 @@
+name: Deploy to System
+
+on:
+  workflow_call:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+      system:
+        required: true
+        type: string
+      diff:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    name: Deploy to System
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to System
+        run: echo "Deploy to System"

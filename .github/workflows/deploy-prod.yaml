@@ -1,0 +1,27 @@
+name: Deploy to Production
+
+on:
+  workflow_call:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+      diff:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to Production
+        run: echo "Deploy to Production"
