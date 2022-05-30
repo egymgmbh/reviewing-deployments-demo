@@ -1,0 +1,31 @@
+name: Deploy to Canary
+
+on:
+  workflow_call:
+    inputs:
+      imageTag:
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+      canaryWeight:
+        required: false
+        default: 0
+        type: number
+      diff:
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  deploy:
+    environment: ${{ inputs.environment }}
+    name: Deploy to Canary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy to Canary
+        run: echo "Deploy to Canary"

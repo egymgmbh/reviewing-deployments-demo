@@ -1,0 +1,25 @@
+name: Rollout Canary
+
+on:
+  workflow_dispatch:
+    inputs:
+      canaryWeight:
+        description: 'Canary weight'
+        required: true
+        type: string
+      diff:
+        description: 'Show diff only'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  rollout:
+    name: Rollout Canary
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Rollout Canary
+        run: echo "Rollout Canary"

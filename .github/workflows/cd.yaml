@@ -1,0 +1,55 @@
+name: CD
+
+on:
+  push:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+
+  deploy_staging:
+    needs: [build]
+    uses: ./.github/workflows/deploy-test.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+      system: staging
+      environment: staging
+      diff: true
+
+  diff_canary:
+    needs: [build]
+    uses: ./.github/workflows/deploy-canary.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+      diff: true
+
+  diff_prod:
+    needs: [build]
+    uses: ./.github/workflows/deploy-prod.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+      diff: true
+
+  deploy_canary:
+    needs: [deploy_staging, diff_canary]
+    uses: ./.github/workflows/deploy-canary.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+      environment: canary
+      diff: true
+
+  deploy_prod:
+    needs: [deploy_staging, diff_prod]
+    uses: ./.github/workflows/deploy-prod.yaml
+    with:
+      imageTag: mb${{ github.run_number }}
+      environment: production
+      diff: true
+
+  remove_canary:
+    needs: [deploy_canary, deploy_prod]
+    uses: ./.github/workflows/remove-canary.yaml
+    with:
+      diff: true

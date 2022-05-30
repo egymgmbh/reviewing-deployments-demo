@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+    with:
+      imageTag: ${{ github.sha }}
+
+  deploy_fox:
+    needs: [build]
+    uses: ./.github/workflows/deploy-test.yaml
+    with:
+      imageTag: ${{ github.sha }}
+      system: fox
+      environment: fox
+      diff: true
+
+  test:
+    needs: [deploy_fox]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 8
+
+      - name: Run API tests
+        run: echo "Run API tests"
